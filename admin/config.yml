@@ -1,0 +1,39 @@
+backend:
+  name: git-gateway
+  branch: main # o 'master', según el nombre de tu rama principal
+
+media_folder: "images/uploads" # Dónde se guardarán las imágenes subidas
+public_folder: "/images/uploads"
+
+collections:
+  - name: "configuracion"
+    label: "Configuración General"
+    files:
+      - file: "content/general.json"
+        label: "Información de la Iglesia"
+        name: "general"
+        fields:
+          - { label: "Nombre de la Iglesia", name: "titulo", widget: "string" }
+          - { label: "Dirección", name: "direccion", widget: "text" }
+          - { label: "Pasaje Bíblico del Hero", name: "versiculo", widget: "string" }
+          - { label: "Cita del Pasaje", name: "cita", widget: "string" }
+
+  - name: "servicios"
+    label: "Horarios y Servicios"
+    folder: "content/servicios"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Día", name: "dia", widget: "select", options: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"] }
+      - { label: "Hora", name: "hora", widget: "string", default: "19:30" }
+      - { label: "Nombre del Servicio / Red", name: "titulo", widget: "string" }
+      - { label: "Categoría", name: "categoria", widget: "string", required: false }
+
+  - name: "redes"
+    label: "Redes de Servicio"
+    folder: "content/redes"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Nombre de la Red", name: "nombre", widget: "string" }
+      - { label: "Descripción", name: "descripcion", widget: "text" }
