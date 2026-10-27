@@ -6,6 +6,9 @@
 <title>Iglesia de Dios – IDD · Concepción del Bermejo</title>
 <!-- Netlify Identity Widget para autenticación de Decap CMS -->
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<!-- Parser de Markdown a HTML para leer los artículos de Decap CMS -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -118,7 +121,7 @@ h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.8rem,8.5vw,5.8rem)
 .verse small{font-weight:700;color:var(--muted);letter-spacing:.1em;font-size:.8rem;text-transform:uppercase}
 
 .btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 30px;border-radius:99px;font-weight:700;font-size:.95rem;border:1px solid var(--line);background:var(--surface);color:var(--text);transition:all .3s var(--ease)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 30px;border-radius:99px;font-weight:700;font-size:.95rem;border:1px solid var(--line);background:var(--surface);color:var(--text);transition:all .3s var(--ease);cursor:pointer}
 .btn:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
 .btn.main{background:var(--accent);border-color:var(--accent);color:#fff}
 .btn.main:hover{background:var(--accent-hover);color:#fff}
@@ -181,7 +184,7 @@ h2{font-family:var(--serif);font-weight:400;font-size:clamp(2rem,5vw,3.2rem);lin
 
 /* SERMONS & MEDIA */
 .media-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:24px;margin-top:36px}
-.media-card{background:var(--surface-card);border:1px solid var(--line);border-radius:24px;overflow:hidden;transition:transform .4s var(--ease), box-shadow .4s}
+.media-card{background:var(--surface-card);border:1px solid var(--line);border-radius:24px;overflow:hidden;transition:transform .4s var(--ease), box-shadow .4s;cursor:pointer}
 .media-card:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
 .media-thumb{height:180px;background:linear-gradient(135deg, var(--sky), var(--soft));position:relative;display:grid;place-items:center;overflow:hidden}
 .media-thumb img{width:100%;height:100%;object-fit:cover}
@@ -189,8 +192,23 @@ h2{font-family:var(--serif);font-weight:400;font-size:clamp(2rem,5vw,3.2rem);lin
 .media-card:hover .play-icon{transform:scale(1.1)}
 .media-info{padding:24px}
 .media-info span{font-size:.78rem;font-weight:700;color:var(--muted);text-transform:uppercase}
-.media-info h3{font-family:var(--serif);font-size:1.3rem;margin:8px 0;line-height:1.3}
-.media-info p{font-size:.9rem;color:var(--muted);margin:0}
+.media-info h3{font-family:var(--serif);font-size:1.3rem;margin:8px 0;line-height:1.3;color:var(--text)}
+.media-info p{font-size:.9rem;color:var(--muted);margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* MODAL ARTICLE READER */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.75);backdrop-filter:blur(8px);z-index:300;display:grid;place-items:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s var(--ease)}
+.modal-overlay.active{opacity:1;pointer-events:auto}
+.modal-container{background:var(--surface);border:1px solid var(--line);border-radius:28px;width:100%;max-width:800px;max-height:90vh;overflow-y:auto;padding:36px;position:relative;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);transform:translateY(20px);transition:transform .3s var(--ease)}
+.modal-overlay.active .modal-container{transform:translateY(0)}
+.modal-close{position:absolute;top:20px;right:20px;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--text);font-size:1.2rem;display:grid;place-items:center;cursor:pointer;transition:all .2s}
+.modal-close:hover{background:var(--sky);color:var(--accent)}
+.modal-header span{font-size:.8rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.1em}
+.modal-header h2{font-family:var(--serif);font-size:2.2rem;margin:10px 0 14px}
+.modal-meta{display:flex;gap:16px;color:var(--muted);font-size:.88rem;margin-bottom:24px;border-bottom:1px solid var(--line);padding-bottom:16px}
+.modal-video{width:100%;height:380px;border-radius:18px;border:0;margin-bottom:24px}
+.modal-body{font-size:1.05rem;line-height:1.8;color:var(--text)}
+.modal-body p{margin-bottom:1.2em}
+.modal-body h1,.modal-body h2,.modal-body h3{font-family:var(--serif);margin-top:1.5em;margin-bottom:.5em}
 
 /* REDES */
 .search-box{margin-bottom:32px;max-width:400px}
@@ -398,52 +416,42 @@ footer .brand{color:var(--text)}
   <div class="wrap">
     <span class="tag rv">Mensajes</span>
     <h2 class="rv" style="--d:100ms">Revive nuestras prédicas recientes</h2>
-    <p class="lead rv" style="--d:200ms">Escucha y reflexiona con la Palabra compartida en nuestros servicios generales.</p>
+    <p class="lead rv" style="--d:200ms">Escucha y reflexiona con la Palabra compartida en nuestros servicios generales. Haz clic en cualquiera para leer el artículo completo.</p>
     
     <div class="media-grid" id="sermonsContainer">
-      <!-- Tarjetas estáticas iniciales como resguardo -->
-      <div class="media-card rv" style="--d:100ms">
+      <!-- Tarjeta estática de ejemplo -->
+      <div class="media-card rv" onclick="openSermonModal('Firmeza en Tiempos de Cambio', 'Servicio Dominical', 'Iglesia de Dios', 'Permanece fiel en tiempos difíciles. Este es un artículo de demostración. Cuando publiques desde el panel de Netlify, tus publicaciones aparecerán automáticamente aquí.', '')">
         <div class="media-thumb">
-          <svg width="100%" height="100%" viewBox="0 0 400 200" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#3f74b5"/>
-                <stop offset="100%" stop-color="#1e293b"/>
-              </linearGradient>
-            </defs>
-            <rect width="400" height="200" fill="url(#g1)"/>
-          </svg>
           <div class="play-icon">▶</div>
         </div>
         <div class="media-info">
           <span>Servicio Dominical</span>
           <h3>Firmeza en Tiempos de Cambio</h3>
-          <p>Un mensaje inspirador sobre permanecer anclados en la fe frente a las adversidades cotidianas.</p>
-        </div>
-      </div>
-
-      <div class="media-card rv" style="--d:200ms">
-        <div class="media-thumb">
-          <svg width="100%" height="100%" viewBox="0 0 400 200" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#d4a359"/>
-                <stop offset="100%" stop-color="#3f74b5"/>
-              </linearGradient>
-            </defs>
-            <rect width="400" height="200" fill="url(#g2)"/>
-          </svg>
-          <div class="play-icon">▶</div>
-        </div>
-        <div class="media-info">
-          <span>Estudio Bíblico</span>
-          <h3>El Poder de la Oración Eficaz</h3>
-          <p>Profundizando en las disciplinas espirituales que transforman nuestros hogares y ciudad.</p>
+          <p>Un mensaje inspirador sobre permanecer anclados en la fe frente a las adversidades cotidianas. Haz clic para leer el artículo.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<!-- MODAL PARA VER ARTÍCULO COMPLETO -->
+<div class="modal-overlay" id="sermonModal">
+  <div class="modal-container">
+    <button class="modal-close" onclick="closeSermonModal()">✕</button>
+    <div class="modal-header">
+      <span id="mCategory">Categoría</span>
+      <h2 id="mTitle">Título de la Prédica</h2>
+    </div>
+    <div class="modal-meta">
+      <span id="mAuthor">👤 Pastor</span>
+      <span id="mDate">📅 Fecha</span>
+    </div>
+    <iframe id="mVideo" class="modal-video" style="display:none" allowfullscreen></iframe>
+    <div class="modal-body" id="mBody">
+      Cargando contenido...
+    </div>
+  </div>
+</div>
 
 <!-- NETWORKS -->
 <section id="redes">
@@ -587,8 +595,42 @@ footer .brand{color:var(--text)}
 </footer>
 
 <script>
+// --- FUNCIONES DEL MODAL DE ARTÍCULO COMPLETO ---
+function openSermonModal(title, category, author, bodyMarkdown, videoUrl, date) {
+  document.getElementById('mTitle').textContent = title || 'Prédica';
+  document.getElementById('mCategory').textContent = category || 'Mensaje';
+  document.getElementById('mAuthor').textContent = '👤 ' + (author || 'Iglesia de Dios');
+  document.getElementById('mDate').textContent = '📅 ' + (date || 'Reciente');
+  
+  var bodyContainer = document.getElementById('mBody');
+  if (typeof marked !== 'undefined' && bodyMarkdown) {
+    bodyContainer.innerHTML = marked.parse(bodyMarkdown);
+  } else {
+    bodyContainer.innerHTML = '<p>' + (bodyMarkdown || 'Sin contenido adicional.') + '</p>';
+  }
+
+  var videoIframe = document.getElementById('mVideo');
+  if (videoUrl) {
+    var embedUrl = videoUrl.replace("watch?v=", "embed/");
+    videoIframe.src = embedUrl;
+    videoIframe.style.display = 'block';
+  } else {
+    videoIframe.style.display = 'none';
+    videoIframe.src = '';
+  }
+
+  document.getElementById('sermonModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSermonModal() {
+  document.getElementById('sermonModal').classList.remove('active');
+  document.getElementById('mVideo').src = '';
+  document.body.style.overflow = 'auto';
+}
+
 (function(){
-  // --- NETLIFY IDENTITY REDIRECT FOR DECAP CMS ---
+  // --- NETLIFY IDENTITY REDIRECT ---
   if (window.netlifyIdentity) {
     window.netlifyIdentity.on("init", function(user) {
       if (!user) {
@@ -599,7 +641,7 @@ footer .brand{color:var(--text)}
     });
   }
 
-  // --- THEME MANAGEMENT ---
+  // --- TEMA CLARO / OSCURO ---
   var themeToggle = document.getElementById('themeToggle');
   var storedTheme = localStorage.getItem('idd_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
   
@@ -615,26 +657,79 @@ footer .brand{color:var(--text)}
     applyTheme(current === 'dark' ? 'light' : 'dark');
   });
 
-  // --- MOBILE MENU TOGGLE ---
+  // --- MENÚ MÓVIL ---
   var menuBtn = document.getElementById('menuBtn');
   var mobileMenu = document.getElementById('mobileMenu');
-  menuBtn.addEventListener('click', function() {
-    mobileMenu.classList.toggle('open');
-  });
+  menuBtn.addEventListener('click', function() { mobileMenu.classList.toggle('open'); });
   document.querySelectorAll('.m-link').forEach(function(l) {
     l.addEventListener('click', function() { mobileMenu.classList.remove('open'); });
   });
 
-  // --- DINÁMICO: Cargar Configuración General desde Decap CMS ---
-  fetch('/content/general.json')
-    .then(function(res) { return res.json(); })
-    .then(function(data) {
-      if (data.versiculo) document.getElementById('heroVerse').textContent = '«' + data.versiculo + '»';
-      if (data.cita_versiculo) document.getElementById('heroCita').textContent = data.cita_versiculo;
-      if (data.direccion) document.getElementById('addressText').innerHTML = '📍 ' + data.direccion.replace(/\n/g, '<br>');
-      if (data.maps_link) document.getElementById('mapsBtn').href = data.maps_link;
-    })
-    .catch(function(err) { console.log('Usando configuración por defecto.'); });
+  // --- LECTOR DINÁMICO DE PRÉDICAS PUBLICADAS DESDE NETLIFY / DECAP CMS ---
+  function loadSermonsFromCMS() {
+    // Consulta la API de GitHub para obtener los archivos en content/predicas
+    var repoUser = 'MATIAS-ISLAS-ARG'; // Tu usuario
+    var repoName = 'IDD';               // Tu repositorio
+
+    fetch('https://api.github.com/repos/' + repoUser + '/' + repoName + '/contents/content/predicas')
+      .then(function(res) { return res.json(); })
+      .then(function(files) {
+        if (Array.isArray(files) && files.length > 0) {
+          var container = document.getElementById('sermonsContainer');
+          container.innerHTML = ''; // Limpia el contenido anterior
+
+          files.forEach(function(file) {
+            if (file.name.endsWith('.md')) {
+              fetch(file.download_url)
+                .then(function(res) { return res.text(); })
+                .then(function(mdContent) {
+                  // Separar Frontmatter (variables) de Decap CMS
+                  var parts = mdContent.split('---');
+                  if (parts.length >= 3) {
+                    var yamlText = parts[1];
+                    var bodyMarkdown = parts.slice(2).join('---').trim();
+
+                    var titleMatch = yamlText.match(/title:\s*["']?([^"'\n]+)["']?/);
+                    var categoryMatch = yamlText.match(/category:\s*["']?([^"'\n]+)["']?/);
+                    var authorMatch = yamlText.match(/author:\s*["']?([^"'\n]+)["']?/);
+                    var videoMatch = yamlText.match(/video_url:\s*["']?([^"'\n]+)["']?/);
+                    var summaryMatch = yamlText.match(/summary:\s*["']?([^"'\n]+)["']?/);
+                    var dateMatch = yamlText.match(/date:\s*["']?([^"'\n]+)["']?/);
+
+                    var title = titleMatch ? titleMatch[1] : 'Prédica';
+                    var category = categoryMatch ? categoryMatch[1] : 'Servicio General';
+                    var author = authorMatch ? authorMatch[1] : 'Iglesia de Dios';
+                    var videoUrl = videoMatch ? videoMatch[1] : '';
+                    var summary = summaryMatch ? summaryMatch[1] : bodyMarkdown.substring(0, 120) + '...';
+                    var date = dateMatch ? dateMatch[1] : '';
+
+                    var card = document.createElement('div');
+                    card.className = 'media-card rv in';
+                    card.innerHTML = 
+                      '<div class="media-thumb"><div class="play-icon">▶</div></div>' +
+                      '<div class="media-info">' +
+                        '<span>' + category + '</span>' +
+                        '<h3>' + title + '</h3>' +
+                        '<p>' + summary + '</p>' +
+                      '</div>';
+
+                    card.onclick = function() {
+                      openSermonModal(title, category, author, bodyMarkdown, videoUrl, date);
+                    };
+
+                    container.appendChild(card);
+                  }
+                });
+            }
+          });
+        }
+      })
+      .catch(function(err) {
+        console.log('Cargando vista estática predeterminada.');
+      });
+  }
+
+  loadSermonsFromCMS();
 
   // --- REDES DE SERVICIO ---
   var R = [
@@ -677,7 +772,7 @@ footer .brand{color:var(--text)}
 
   document.getElementById('y').textContent = new Date().getFullYear();
 
-  // --- PRÓXIMA REUNIÓN & COUNTDOWN ---
+  // --- COUNTDOWN TIMER ---
   var rows = [].slice.call(document.querySelectorAll('.row'));
   var now = new Date();
   var nextDate = null;
@@ -736,7 +831,7 @@ footer .brand{color:var(--text)}
     setInterval(updateCountdown, 1000);
   }
 
-  // --- REVEAL ANIMATION & COUNTERS ---
+  // --- ANIMACIONES REVEAL ---
   var io = new IntersectionObserver(function(entries) {
     entries.forEach(function(e) {
       if (!e.isIntersecting) return;
@@ -761,7 +856,7 @@ footer .brand{color:var(--text)}
 
   document.querySelectorAll('.rv').forEach(function(el) { io.observe(el); });
 
-  // --- SCROLL BAR & NAV ---
+  // --- SCROLL BAR & HEADER ---
   var bar = document.getElementById('bar');
   var hd = document.getElementById('hd');
   var blobs = [].slice.call(document.querySelectorAll('.blob'));
@@ -787,39 +882,17 @@ footer .brand{color:var(--text)}
   }, { passive: true });
   onScroll();
 
-  var navLinks = [].slice.call(document.querySelectorAll('#nv a:not(.cta)'));
-  var sectionObserver = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) {
-      if (e.isIntersecting) {
-        navLinks.forEach(function(a) {
-          a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id);
-        });
-      }
-    });
-  }, { rootMargin: '-45% 0px -50% 0px' });
-
-  ['nosotros', 'servicios', 'predicas', 'redes', 'oracion', 'visita'].forEach(function(id) {
-    var sec = document.getElementById(id);
-    if (sec) sectionObserver.observe(sec);
-  });
-
-  // --- FORM SUBMISSION & TOAST ---
+  // --- PETICIÓN DE ORACIÓN & TOAST ---
   var prayerForm = document.getElementById('prayerForm');
   var toast = document.getElementById('toast');
   var toastMsg = document.getElementById('toastMsg');
 
-  function showToast(msg) {
-    toastMsg.textContent = msg;
-    toast.classList.add('show');
-    setTimeout(function() {
-      toast.classList.remove('show');
-    }, 4000);
-  }
-
   prayerForm.addEventListener('submit', function(e) {
     e.preventDefault();
     var name = document.getElementById('p-name').value;
-    showToast('Gracias ' + name + ', hemos recibido tu petición de oración.');
+    toastMsg.textContent = 'Gracias ' + name + ', hemos recibido tu petición de oración.';
+    toast.classList.add('show');
+    setTimeout(function() { toast.classList.remove('show'); }, 4000);
     prayerForm.reset();
   });
 
