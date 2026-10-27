@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Horarios · Iglesia de Dios</title>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="bar"></div>
+<header id="hd"><div class="wrap nav">
+  <a href="index.html#inicio" class="brand">Iglesia de Dios</a>
+  <nav class="nav-links" id="nv">
+    <a href="index.html#mensajes">Mensajes</a><a href="index.html#horarios">Horarios</a><a href="index.html#redes">Redes</a><a href="index.html#historia">Historia</a><a href="index.html#playlist">Playlist</a><a href="index.html#atencion">Atención</a>
+    <a href="index.html#contacto" class="cta">Visítanos</a>
+  </nav>
+  <div style="display:flex;align-items:center">
+    <button class="theme-toggle d" aria-label="Cambiar tema">🌙</button>
+    <button class="menu-btn" id="menuBtn" aria-label="Abrir menú"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  </div>
+</div></header>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html#mensajes" class="m-link">Mensajes</a><a href="index.html#horarios" class="m-link">Horarios</a><a href="index.html#redes" class="m-link">Nuestras Redes</a><a href="index.html#historia" class="m-link">Nuestra Historia</a><a href="index.html#playlist" class="m-link">Playlist</a><a href="index.html#atencion" class="m-link">Atención Consejería</a><a href="index.html#contacto" class="m-link" style="color:var(--accent)">Visítanos</a>
+  <button class="m-theme" type="button"><span class="lbl">Modo oscuro</span><span class="i">🌙</span></button>
+</div>
+<main>
+<section class="page-top"><div class="wrap"><a class="back" href="index.html#inicio">← Volver al inicio</a><br><span class="tag">Horarios</span><h1 style="font-size:clamp(2.2rem,6vw,3.6rem);margin:0 0 12px">Horarios de reuniones</h1><p class="lead">Ordenados desde la reunión más cercana.</p></div></section>
+<section class="sv flat" id="horarios"><div class="wrap svg">
+  <div class="sticky"><span class="tag rv">Horarios</span><h2 class="rv" style="--d:100ms">Un espacio para ti toda la semana</h2>
+  <p class="lead rv" style="--d:200ms">Actividades para niños, jóvenes, hombres, mujeres y la familia entera.</p>
+  <div class="next-card rv" id="next" style="--d:300ms"><span class="pulse"></span><div><small>Reunión más cercana</small><b id="nt">Cargando…</b></div></div>
+</div>
+  <div class="rows" id="servicesContainer" ></div>
+</div><div class="wrap"></div></section>
+</main>
+<div class="toast" id="toast"><span>✓</span><span id="toastMsg"></span></div>
+<footer><div class="wrap"><a href="index.html#inicio" class="brand">Iglesia de Dios</a>
+<span>Tucumán 545 · Concepción del Bermejo, Chaco · © <span id="y">2026</span> · <a href="/admin/" style="text-decoration:underline">Panel Admin</a></span></div></footer>
+<script src="js/app.js"></script>
+</body>
+</html>
