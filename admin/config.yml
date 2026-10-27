@@ -1,70 +1,78 @@
+# Decap CMS – ajusta backend/branch si tu configuración actual es distinta
 backend:
   name: git-gateway
-  branch: main # Cambia a 'master' si esa es tu rama principal
+  branch: main
 
-media_folder: "images/uploads"
-public_folder: "/images/uploads"
+media_folder: "img/uploads"
+public_folder: "/img/uploads"
+locale: es
 
 collections:
-  # 1. PRÉDICAS Y MENSAJES (Sección #predicas)
-  - name: "predicas"
-    label: "Prédicas y Mensajes"
+  - name: predicas
+    label: "Mensajes (Prédicas)"
     folder: "content/predicas"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
-      - { label: "Título de la Prédica", name: "title", widget: "string" }
-      - { label: "Categoría / Serie", name: "category", widget: "select", options: ["Servicio Dominical", "Estudio Bíblico", "Red de Jóvenes", "Servicio General", "Especial"] }
-      - { label: "Enlace de Video (YouTube)", name: "video_url", widget: "string", required: false, hint: "Pega la URL de YouTube para reproducir el video" }
-      - { label: "Imagen de Portada", name: "thumbnail", widget: "image", required: false }
-      - { label: "Resumen o Descripción", name: "summary", widget: "text" }
-      - { label: "Notas / Bosquejo Completo", name: "body", widget: "markdown", required: false }
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "Fecha", name: "date", widget: "datetime"}
+      - {label: "Categoría", name: "category", widget: "string", default: "Servicio General"}
+      - {label: "Predicador", name: "author", widget: "string", default: "Iglesia de Dios"}
+      - {label: "Link de YouTube", name: "video_url", widget: "string", required: false}
+      - {label: "Resumen corto", name: "summary", widget: "string"}
+      - {label: "Contenido", name: "body", widget: "markdown"}
 
-  # 2. NOTICIAS Y ANUNCIOS (Artículos / Novedades)
-  - name: "noticias"
-    label: "Noticias y Artículos"
-    folder: "content/noticias"
+  - name: horarios
+    label: "Horarios"
+    folder: "content/horarios"
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    slug: "{{dia}}-{{hora}}-{{nombre}}"
+    summary: "{{nombre}} · {{hora}}"
     fields:
-      - { label: "Título de la Noticia", name: "title", widget: "string" }
-      - { label: "Fecha de Publicación", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
-      - { label: "Imagen Destacada", name: "image", widget: "image", required: false }
-      - { label: "Contenido del Artículo", name: "body", widget: "markdown" }
+      - {label: "Nombre de la reunión", name: "nombre", widget: "string"}
+      - label: "Día"
+        name: "dia"
+        widget: "select"
+        options:
+          - {label: "Domingo", value: "0"}
+          - {label: "Lunes", value: "1"}
+          - {label: "Martes", value: "2"}
+          - {label: "Miércoles", value: "3"}
+          - {label: "Jueves", value: "4"}
+          - {label: "Viernes", value: "5"}
+          - {label: "Sábado", value: "6"}
+      - {label: "Hora (24 hs, ej: 19:30)", name: "hora", widget: "string", pattern: ["^\\d{1,2}:\\d{2}$", "Usa el formato 19:30"]}
+      - {label: "Etiqueta (opcional)", name: "etiqueta", widget: "string", required: false}
 
-  # 3. HORARIOS Y SERVICIOS (Sección #servicios)
-  - name: "servicios"
-    label: "Horarios y Servicios"
-    folder: "content/servicios"
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - { label: "Día de la semana", name: "dia_nombre", widget: "select", options: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"] }
-      - { label: "Número de Día (0=Domingo, 1=Lunes, ... 6=Sábado)", name: "dia_num", widget: "number", value_type: "int" }
-      - { label: "Hora (Ej: 19:30 o 20:00)", name: "hora", widget: "string" }
-      - { label: "Nombre de la Reunión", name: "nombre", widget: "string" }
-      - { label: "Etiqueta / Badge", name: "tag", widget: "string", required: false, hint: "Ej: Principal, Enseñanza, Infantil, Jóvenes" }
-
-  # 4. REDES DE SERVICIO (Sección #redes)
-  - name: "redes"
-    label: "Redes de Servicio"
+  - name: redes
+    label: "Nuestras Redes"
     folder: "content/redes"
     create: true
     slug: "{{slug}}"
     fields:
-      - { label: "Nombre de la Red", name: "nombre", widget: "string" }
-      - { label: "Descripción", name: "descripcion", widget: "text" }
-      - { label: "Orden de Aparición", name: "orden", widget: "number", default: 1, value_type: "int" }
+      - {label: "Nombre", name: "nombre", widget: "string"}
+      - {label: "Descripción", name: "descripcion", widget: "text"}
+      - {label: "Orden (1 aparece primero)", name: "orden", widget: "number", value_type: "int", default: 1}
 
-  # 5. INFORMACIÓN Y TEXTOS GENERALES
-  - name: "configuracion"
-    label: "Información de la Iglesia"
-    files:
-      - file: "content/general.json"
-        label: "Textos Principales"
-        name: "general"
-        fields:
-          - { label: "Versículo del Hero", name: "versiculo", widget: "string" }
-          - { label: "Cita Bíblica", name: "cita_versiculo", widget: "string" }
-          - { label: "Dirección Física", name: "direccion", widget: "string" }
-          - { label: "Enlace Google Maps", name: "maps_link", widget: "string" }
+  - name: historia
+    label: "Nuestra Historia (fotos)"
+    folder: "content/historia"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Título", name: "titulo", widget: "string"}
+      - {label: "Foto (vertical, 9:16 ideal)", name: "imagen", widget: "image"}
+      - {label: "Año o fecha", name: "anio", widget: "string", required: false}
+      - {label: "Orden", name: "orden", widget: "number", value_type: "int", default: 1}
+
+  - name: playlist
+    label: "Playlist"
+    folder: "content/playlist"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Canción", name: "titulo", widget: "string"}
+      - {label: "Artista", name: "artista", widget: "string"}
+      - {label: "Archivo de audio (mp3)", name: "audio", widget: "file"}
+      - {label: "Portada", name: "portada", widget: "image", required: false}
+      - {label: "Orden", name: "orden", widget: "number", value_type: "int", default: 1}
