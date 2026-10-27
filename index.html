@@ -318,8 +318,8 @@ footer .brand{color:var(--text)}
     </h1>
     
     <div class="verse">
-      <p>«Yo me alegré con los que me decían: A la casa de Jehová iremos.»</p>
-      <small>SALMO 122:1</small>
+      <p id="heroVerse">«Yo me alegré con los que me decían: A la casa de Jehová iremos.»</p>
+      <small id="heroCita">SALMO 122:1</small>
     </div>
     
     <div class="btns">
@@ -380,7 +380,7 @@ footer .brand{color:var(--text)}
       </div>
     </div>
     
-    <div class="rows">
+    <div class="rows" id="servicesContainer">
       <div class="row rv" data-d="2" data-h="20:00"><span class="d">Martes</span><span class="t">20:00</span><span class="n">Red de Adoración</span></div>
       <div class="row rv" data-d="3" data-h="19:30"><span class="d">Miércoles</span><span class="t">19:30</span><span class="n">Estudio Bíblico</span><span class="g">Enseñanza</span></div>
       <div class="row rv" data-d="4" data-h="19:30"><span class="d">Jueves</span><span class="t">19:30</span><span class="n">Red de Mujeres</span></div>
@@ -400,7 +400,8 @@ footer .brand{color:var(--text)}
     <h2 class="rv" style="--d:100ms">Revive nuestras prédicas recientes</h2>
     <p class="lead rv" style="--d:200ms">Escucha y reflexiona con la Palabra compartida en nuestros servicios generales.</p>
     
-    <div class="media-grid">
+    <div class="media-grid" id="sermonsContainer">
+      <!-- Tarjetas estáticas iniciales como resguardo -->
       <div class="media-card rv" style="--d:100ms">
         <div class="media-thumb">
           <svg width="100%" height="100%" viewBox="0 0 400 200" preserveAspectRatio="none">
@@ -411,7 +412,6 @@ footer .brand{color:var(--text)}
               </linearGradient>
             </defs>
             <rect width="400" height="200" fill="url(#g1)"/>
-            <circle cx="200" cy="100" r="60" fill="white" opacity="0.1"/>
           </svg>
           <div class="play-icon">▶</div>
         </div>
@@ -439,26 +439,6 @@ footer .brand{color:var(--text)}
           <span>Estudio Bíblico</span>
           <h3>El Poder de la Oración Eficaz</h3>
           <p>Profundizando en las disciplinas espirituales que transforman nuestros hogares y ciudad.</p>
-        </div>
-      </div>
-
-      <div class="media-card rv" style="--d:300ms">
-        <div class="media-thumb">
-          <svg width="100%" height="100%" viewBox="0 0 400 200" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#2563eb"/>
-                <stop offset="100%" stop-color="#9333ea"/>
-              </linearGradient>
-            </defs>
-            <rect width="400" height="200" fill="url(#g3)"/>
-          </svg>
-          <div class="play-icon">▶</div>
-        </div>
-        <div class="media-info">
-          <span>Red de Jóvenes</span>
-          <h3>Caminando con Propósito</h3>
-          <p>Enseñanza dirigida a la juventud sobre decisiones, liderazgo y visión cristiana.</p>
         </div>
       </div>
     </div>
@@ -552,7 +532,7 @@ footer .brand{color:var(--text)}
       <div class="box rv">
         <div>
           <h3>Nuestra Ubicación</h3>
-          <p class="address">
+          <p class="address" id="addressText">
             📍 Tucumán N° 545<br>
             Concepción del Bermejo, Chaco<br>
             República Argentina
@@ -563,7 +543,7 @@ footer .brand{color:var(--text)}
         <iframe class="map-embed" src="https://maps.google.com/maps?q=Tucum%C3%A1n%20545%2C%20Concepci%C3%B3n%20del%20Bermejo%2C%20Chaco&t=&z=15&ie=UTF8&iwloc=&output=embed" loading="lazy"></iframe>
 
         <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <a class="btn main" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Tucum%C3%A1n+545+Concepci%C3%B3n+del+Bermejo+Chaco">Abrir en Google Maps</a>
+          <a class="btn main" id="mapsBtn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Tucum%C3%A1n+545+Concepci%C3%B3n+del+Bermejo+Chaco">Abrir en Google Maps</a>
         </div>
       </div>
       
@@ -645,7 +625,18 @@ footer .brand{color:var(--text)}
     l.addEventListener('click', function() { mobileMenu.classList.remove('open'); });
   });
 
-  // --- DATA & REDES RENDER ---
+  // --- DINÁMICO: Cargar Configuración General desde Decap CMS ---
+  fetch('/content/general.json')
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.versiculo) document.getElementById('heroVerse').textContent = '«' + data.versiculo + '»';
+      if (data.cita_versiculo) document.getElementById('heroCita').textContent = data.cita_versiculo;
+      if (data.direccion) document.getElementById('addressText').innerHTML = '📍 ' + data.direccion.replace(/\n/g, '<br>');
+      if (data.maps_link) document.getElementById('mapsBtn').href = data.maps_link;
+    })
+    .catch(function(err) { console.log('Usando configuración por defecto.'); });
+
+  // --- REDES DE SERVICIO ---
   var R = [
     ["Niños", "Aprender de Dios en un ambiente seguro, lúdico y lleno de amor."],
     ["Adolescentes", "Formando una fe sólida entre amigos y buenos valores."],
@@ -675,21 +666,18 @@ footer .brand{color:var(--text)}
       }
     });
   }
-  
   renderGrid('');
 
-  // Search filter
   document.getElementById('searchInput').addEventListener('input', function(e) {
     renderGrid(e.target.value);
   });
 
-  // Marquee fill
   var marqueeContent = R.map(function(r){ return '<span>' + r[0] + '</span>'; }).join('');
   tr.innerHTML = marqueeContent + marqueeContent;
 
   document.getElementById('y').textContent = new Date().getFullYear();
 
-  // --- PROXIMA REUNIÓN & COUNTDOWN ---
+  // --- PRÓXIMA REUNIÓN & COUNTDOWN ---
   var rows = [].slice.call(document.querySelectorAll('.row'));
   var now = new Date();
   var nextDate = null;
@@ -724,7 +712,6 @@ footer .brand{color:var(--text)}
   if (bestRow && nextDate) {
     document.getElementById('nt').textContent = bestRow.querySelector('.n').textContent + ' · ' + bestRow.querySelector('.d').textContent + ' ' + bestRow.querySelector('.t').textContent + ' hs';
     
-    // Countdown Timer Loop
     function updateCountdown() {
       var current = new Date();
       var distance = nextDate - current;
@@ -774,7 +761,7 @@ footer .brand{color:var(--text)}
 
   document.querySelectorAll('.rv').forEach(function(el) { io.observe(el); });
 
-  // --- SCROLL: PROGRESS BAR, HEADER, PARALLAX, NAV ACTIVE ---
+  // --- SCROLL BAR & NAV ---
   var bar = document.getElementById('bar');
   var hd = document.getElementById('hd');
   var blobs = [].slice.call(document.querySelectorAll('.blob'));
