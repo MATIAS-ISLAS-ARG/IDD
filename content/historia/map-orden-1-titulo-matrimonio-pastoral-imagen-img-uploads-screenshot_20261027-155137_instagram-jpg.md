@@ -1,5 +1,5 @@
 ---
 titulo: MATRIMONIO PASTORAL
-imagen: /img/uploads/screenshot_20261027-155137_instagram.jpg
+imagen: /img/uploads/screenshot_20261027-155200_instagram.jpg
 orden: 1
 ---
