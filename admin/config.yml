@@ -1,34 +1,51 @@
 backend:
   name: git-gateway
-  branch: main # o 'master', según el nombre de tu rama principal
+  branch: main # Cambia a 'master' si esa es tu rama principal
 
-media_folder: "images/uploads" # Dónde se guardarán las imágenes subidas
+media_folder: "images/uploads"
 public_folder: "/images/uploads"
 
 collections:
-  - name: "configuracion"
-    label: "Configuración General"
-    files:
-      - file: "content/general.json"
-        label: "Información de la Iglesia"
-        name: "general"
-        fields:
-          - { label: "Nombre de la Iglesia", name: "titulo", widget: "string" }
-          - { label: "Dirección", name: "direccion", widget: "text" }
-          - { label: "Pasaje Bíblico del Hero", name: "versiculo", widget: "string" }
-          - { label: "Cita del Pasaje", name: "cita", widget: "string" }
+  # 1. PRÉDICAS Y MENSAJES (Sección #predicas)
+  - name: "predicas"
+    label: "Prédicas y Mensajes"
+    folder: "content/predicas"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Título de la Prédica", name: "title", widget: "string" }
+      - { label: "Categoría / Serie", name: "category", widget: "select", options: ["Servicio Dominical", "Estudio Bíblico", "Red de Jóvenes", "Servicio General", "Especial"] }
+      - { label: "Enlace de Video (YouTube)", name: "video_url", widget: "string", required: false, hint: "Pega la URL de YouTube para reproducir el video" }
+      - { label: "Imagen de Portada", name: "thumbnail", widget: "image", required: false }
+      - { label: "Resumen o Descripción", name: "summary", widget: "text" }
+      - { label: "Notas / Bosquejo Completo", name: "body", widget: "markdown", required: false }
 
+  # 2. NOTICIAS Y ANUNCIOS (Artículos / Novedades)
+  - name: "noticias"
+    label: "Noticias y Artículos"
+    folder: "content/noticias"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Título de la Noticia", name: "title", widget: "string" }
+      - { label: "Fecha de Publicación", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
+      - { label: "Imagen Destacada", name: "image", widget: "image", required: false }
+      - { label: "Contenido del Artículo", name: "body", widget: "markdown" }
+
+  # 3. HORARIOS Y SERVICIOS (Sección #servicios)
   - name: "servicios"
     label: "Horarios y Servicios"
     folder: "content/servicios"
     create: true
     slug: "{{slug}}"
     fields:
-      - { label: "Día", name: "dia", widget: "select", options: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"] }
-      - { label: "Hora", name: "hora", widget: "string", default: "19:30" }
-      - { label: "Nombre del Servicio / Red", name: "titulo", widget: "string" }
-      - { label: "Categoría", name: "categoria", widget: "string", required: false }
+      - { label: "Día de la semana", name: "dia_nombre", widget: "select", options: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"] }
+      - { label: "Número de Día (0=Domingo, 1=Lunes, ... 6=Sábado)", name: "dia_num", widget: "number", value_type: "int" }
+      - { label: "Hora (Ej: 19:30 o 20:00)", name: "hora", widget: "string" }
+      - { label: "Nombre de la Reunión", name: "nombre", widget: "string" }
+      - { label: "Etiqueta / Badge", name: "tag", widget: "string", required: false, hint: "Ej: Principal, Enseñanza, Infantil, Jóvenes" }
 
+  # 4. REDES DE SERVICIO (Sección #redes)
   - name: "redes"
     label: "Redes de Servicio"
     folder: "content/redes"
@@ -37,3 +54,17 @@ collections:
     fields:
       - { label: "Nombre de la Red", name: "nombre", widget: "string" }
       - { label: "Descripción", name: "descripcion", widget: "text" }
+      - { label: "Orden de Aparición", name: "orden", widget: "number", default: 1, value_type: "int" }
+
+  # 5. INFORMACIÓN Y TEXTOS GENERALES
+  - name: "configuracion"
+    label: "Información de la Iglesia"
+    files:
+      - file: "content/general.json"
+        label: "Textos Principales"
+        name: "general"
+        fields:
+          - { label: "Versículo del Hero", name: "versiculo", widget: "string" }
+          - { label: "Cita Bíblica", name: "cita_versiculo", widget: "string" }
+          - { label: "Dirección Física", name: "direccion", widget: "string" }
+          - { label: "Enlace Google Maps", name: "maps_link", widget: "string" }
