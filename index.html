@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Iglesia de Dios – IDD · Concepción del Bermejo</title>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="bar"></div>
+<header id="hd"><div class="wrap nav">
+  <a href="#inicio" class="brand">Iglesia de Dios</a>
+  <nav class="nav-links" id="nv">
+    <a href="#mensajes">Mensajes</a><a href="#horarios">Horarios</a><a href="#historia">Historia</a><a href="#radio">Radio</a><a href="#atencion">Atención</a>
+    <a href="#contacto" class="cta">Visítanos</a>
+  </nav>
+  <div style="display:flex;align-items:center">
+    <button class="theme-toggle d" aria-label="Cambiar tema">🌙</button>
+    <button class="menu-btn" id="menuBtn" aria-label="Abrir menú"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  </div>
+</div></header>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#mensajes" class="m-link">Mensajes</a><a href="#horarios" class="m-link">Horarios</a><a href="#historia" class="m-link">Nuestra Historia</a><a href="#radio" class="m-link">Radio</a><a href="#atencion" class="m-link">Atención Consejería</a><a href="#contacto" class="m-link" style="color:var(--accent)">Visítanos</a>
+  <button class="m-theme" type="button"><span class="lbl">Modo oscuro</span><span class="i">🌙</span></button>
+</div>
+<main>
+<section class="hero" id="inicio">
+  <div class="blob b1" data-p=".15"></div><div class="blob b2" data-p="-.1"></div><div class="blob b3" data-p=".22"></div>
+  <div class="wrap">
+    <h1><span class="ln"><span>Bienvenidos a</span></span><span class="ln"><span>nuestra casa</span></span></h1>
+    <div class="verse"><p id="heroVerse"></p><small id="heroCita"></small></div>
+    <div class="btns"><a class="btn main" href="#horarios">Ver Horarios</a><a class="btn outline" href="#atencion">Pedir Oración</a><a class="btn" href="#contacto">Cómo Llegar</a></div>
+    <div class="countdown-box"><span class="title">Próximo Servicio En:</span>
+      <div class="timer" id="countdown"><div class="t-unit"><b id="cd-days">00</b><small>Días</small></div><div class="t-unit"><b id="cd-hours">00</b><small>Hs</small></div><div class="t-unit"><b id="cd-mins">00</b><small>Min</small></div><div class="t-unit"><b id="cd-secs">00</b><small>Seg</small></div></div></div>
+  </div>
+</section>
+<section id="mensajes"><div class="wrap">
+  <span class="tag rv">Mensajes</span><h2 class="rv" style="--d:100ms">Revive nuestras prédicas recientes</h2>
+  <p class="lead rv" style="--d:200ms">La Palabra compartida en nuestros servicios. Toca cualquiera para leerla completa.</p>
+  <div class="media-grid" id="sermonsContainer" data-limit="3"></div><div class="more rv"><a class="btn main" href="mensajes.html">Ver más mensajes →</a></div>
+</div></section>
+<section class="sv" id="horarios"><div class="wrap svg">
+  <div class="sticky"><span class="tag rv">Horarios</span><h2 class="rv" style="--d:100ms">Un espacio para ti toda la semana</h2>
+  <p class="lead rv" style="--d:200ms">Actividades para niños, jóvenes, hombres, mujeres y la familia entera.</p>
+  <div class="next-card rv" id="next" style="--d:300ms"><span class="pulse"></span><div><small>Reunión más cercana</small><b id="nt">Cargando…</b></div></div>
+</div>
+  <div class="rows" id="servicesContainer" data-limit="3"></div>
+</div><div class="wrap"><div class="more rv"><a class="btn main" href="horarios.html">Ver todos los horarios →</a></div></div></section>
+<section id="historia"><div class="wrap">
+  <span class="tag rv">Nuestra Historia</span><h2 class="rv" style="--d:100ms">Sé parte de nuestra historia</h2>
+  <p class="lead rv" style="--d:200ms">Momentos que Dios ha escrito junto a nuestra familia, año tras año.</p></div>
+  <div class="reels rv"><div class="rtrack" id="reelTrack"></div></div>
+</section>
+<section id="radio"><div class="wrap">
+  <span class="tag rv">Radio IDD</span><h2 class="rv" style="--d:100ms">Alabanza y Palabra, a toda hora</h2>
+  <p class="lead rv" style="--d:200ms">Música y prédicas para escuchar donde estés. Sintoniza en vivo para oír lo mismo que todos, o elige lo que quieras escuchar.</p>
+  <div class="player radio rv" id="playerRoot">
+    <div class="now" id="now">
+      <div class="onair"><span class="dot"></span><span id="modeLbl">Radio IDD</span></div>
+      <div class="cover" id="cover">♪</div>
+      <span class="kind" id="tKind">&nbsp;</span>
+      <h3 id="tTitle">Cargando…</h3><p id="tArtist">&nbsp;</p>
+      <div class="prog"><span id="cT">0:00</span><input type="range" id="seek" min="0" max="100" step=".1" value="0" aria-label="Progreso"><span id="dT">0:00</span></div>
+      <div class="ctrls"><button id="shuf" title="Aleatorio" aria-label="Aleatorio"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></button><button id="pv" title="Anterior" aria-label="Anterior"></button><button class="pp" id="pp" title="Reproducir" aria-label="Reproducir o pausar"></button><button id="nx" title="Siguiente" aria-label="Siguiente"></button><button id="rep" title="Repetir canción" aria-label="Repetir canción"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4M3 11V9a3 3 0 013-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 01-3 3H3"/></svg></button></div>
+      <div class="vol"><span>🔈</span><input type="range" id="vol" min="0" max="100" value="80" aria-label="Volumen"></div>
+      <button class="live-btn" id="liveBtn" type="button" hidden>Sintonizar en vivo</button>
+    </div>
+    <div class="side">
+      <div class="r-tools"><div class="chips" id="chips"></div><input type="search" id="rSearch" placeholder="Buscar canción o mensaje…" aria-label="Buscar en la radio"></div>
+      <div class="queue" id="queue"></div>
+    </div>
+  </div>
+</div></section>
+<section id="atencion"><div class="wrap"><div class="prayer-section rv">
+  <span class="tag">Atención Consejería</span><h2>¿Podemos orar por ti?</h2>
+  <p style="color:var(--muted);margin-bottom:20px">Déjanos tu petición de oración o motivo de consulta. Nuestro equipo de consejeros te atenderá de manera confidencial.</p>
+  <form class="prayer-form" id="prayerForm" name="atencion" method="POST" data-netlify="true" netlify-honeypot="bot">
+    <input type="hidden" name="form-name" value="atencion"><p hidden><label>No completar: <input name="bot"></label></p>
+    <div class="form-group"><label for="p-name">Nombre completo</label><input type="text" id="p-name" name="nombre" placeholder="Tu nombre" required></div>
+    <div class="form-group"><label for="p-phone">Teléfono / WhatsApp</label><input type="tel" id="p-phone" name="telefono" placeholder="Ej: 3644-XXXXXX"></div>
+    <div class="form-group full"><label for="p-msg">Motivo de oración o mensaje</label><textarea id="p-msg" name="mensaje" rows="4" placeholder="Escribe aquí tu petición..." required></textarea></div>
+    <div class="full" style="margin-top:10px"><button type="submit" class="btn main" style="width:100%">Enviar</button></div>
+  </form></div></div></section>
+<section id="contacto">
+  <div class="wrap">
+    <span class="tag rv">Visítanos</span>
+    <h2 class="rv" style="--d:100ms">Te esperamos con los brazos abiertos</h2>
+    
+    <div class="visit">
+      <div class="box rv">
+        <div>
+          <h3>Nuestra Ubicación</h3>
+          <p class="address" id="addressText">
+            📍 Tucumán N° 545<br>
+            Concepción del Bermejo, Chaco<br>
+            República Argentina
+          </p>
+        </div>
+        
+        <!-- Interactive Map Embed -->
+        <iframe class="map-embed" src="https://maps.google.com/maps?q=Tucum%C3%A1n%20545%2C%20Concepci%C3%B3n%20del%20Bermejo%2C%20Chaco&t=&z=15&ie=UTF8&iwloc=&output=embed" loading="lazy"></iframe>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a class="btn main" id="mapsBtn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Tucum%C3%A1n+545+Concepci%C3%B3n+del+Bermejo+Chaco">Abrir en Google Maps</a>
+        </div>
+      </div>
+      
+      <div class="box rv" style="--d:150ms;background:var(--sky)">
+        <div>
+          <h3>Servicios Principales</h3>
+          <div class="mini-schedule">
+            <div><span>Sábado General</span><b>20:00 hs</b></div>
+            <div><span>Domingo Familiar</span><b>20:00 hs</b></div>
+            <div><span>Estudio Bíblico (Mié)</span><b>19:30 hs</b></div>
+            <div><span>Red de Jóvenes (Vie)</span><b>21:30 hs</b></div>
+            <div><span>Escuela Infantil (Sáb)</span><b>17:30 hs</b></div>
+          </div>
+        </div>
+        
+        <div style="margin-top:30px;padding-top:20px;border-top:1px solid var(--line)">
+          <small style="display:block;color:var(--muted);font-weight:700;margin-bottom:6px;text-transform:uppercase;font-size:.75rem">¿Tienes dudas?</small>
+          <span style="font-weight:700;font-size:1.1rem;color:var(--accent)">Escríbenos o visítanos directamente en los días de servicio.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="modal-overlay" id="sermonModal"><div class="modal-container"><button class="modal-close" onclick="closeSermonModal()">✕</button>
+<div class="modal-header"><span id="mCategory"></span><h2 id="mTitle"></h2></div>
+<div class="modal-meta"><span id="mAuthor"></span><span id="mDate"></span></div>
+<iframe id="mVideo" class="modal-video" style="display:none" allowfullscreen></iframe><div class="modal-body" id="mBody"></div></div></div>
+</main>
+<div class="mini" id="mini"><div class="mc" id="mCover">♪</div><a class="mi" href="#radio"><b id="mT"></b><small id="mA"></small></a><button id="mPP" type="button" aria-label="Reproducir o pausar"></button></div>
+<div class="toast" id="toast"><span>✓</span><span id="toastMsg"></span></div>
+<footer><div class="wrap"><a href="#inicio" class="brand">Iglesia de Dios</a>
+<span>Tucumán 545 · Concepción del Bermejo, Chaco · © <span id="y">2026</span> · <a href="/admin/" style="text-decoration:underline">Panel Admin</a></span></div></footer>
+<script src="js/app.js"></script>
+</body>
+</html>
