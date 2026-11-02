@@ -1,0 +1,81 @@
+# Decap CMS – ajusta backend/branch si tu configuración actual es distinta
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "img/uploads"
+public_folder: "/img/uploads"
+locale: es
+
+collections:
+  - name: predicas
+    label: "Mensajes (Prédicas)"
+    folder: "content/predicas"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "Fecha", name: "date", widget: "datetime"}
+      - {label: "Categoría", name: "category", widget: "string", default: "Servicio General"}
+      - {label: "Predicador", name: "author", widget: "string", default: "Iglesia de Dios"}
+      - {label: "Miniatura (imagen de vista previa)", name: "thumbnail", widget: "image", required: false, hint: "Opcional. Si la dejas vacía y pones link de YouTube, se usa la miniatura del video."}
+      - {label: "Link de YouTube", name: "video_url", widget: "string", required: false}
+      - {label: "Resumen corto", name: "summary", widget: "string"}
+      - {label: "Contenido", name: "body", widget: "markdown"}
+
+  - name: horarios
+    label: "Horarios"
+    folder: "content/horarios"
+    create: true
+    slug: "{{dia}}-{{hora}}-{{nombre}}"
+    summary: "{{nombre}} · {{hora}}"
+    fields:
+      - {label: "Nombre de la reunión", name: "nombre", widget: "string"}
+      - label: "Día"
+        name: "dia"
+        widget: "select"
+        options:
+          - {label: "Domingo", value: "0"}
+          - {label: "Lunes", value: "1"}
+          - {label: "Martes", value: "2"}
+          - {label: "Miércoles", value: "3"}
+          - {label: "Jueves", value: "4"}
+          - {label: "Viernes", value: "5"}
+          - {label: "Sábado", value: "6"}
+      - {label: "Hora (24 hs, ej: 19:30)", name: "hora", widget: "string", pattern: ["^\\d{1,2}:\\d{2}$", "Usa el formato 19:30"]}
+      - {label: "Etiqueta (opcional)", name: "etiqueta", widget: "string", required: false}
+
+  - name: historia
+    label: "Nuestra Historia (fotos)"
+    folder: "content/historia"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Título", name: "titulo", widget: "string"}
+      - {label: "Foto (vertical, 9:16 ideal)", name: "imagen", widget: "image"}
+      - {label: "Año o fecha", name: "anio", widget: "string", required: false}
+      - {label: "Orden", name: "orden", widget: "number", value_type: "int", default: 1}
+
+  - name: playlist
+    label: "Radio (Música y Prédicas)"
+    label_singular: "Audio"
+    folder: "content/playlist"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{titulo}} · {{artista}}"
+    fields:
+      - {label: "Título", name: "titulo", widget: "string"}
+      - label: "Tipo"
+        name: "tipo"
+        widget: "select"
+        default: "musica"
+        options:
+          - {label: "Música / Alabanza", value: "musica"}
+          - {label: "Prédica / Mensaje", value: "predica"}
+      - {label: "Artista o predicador", name: "artista", widget: "string", required: false}
+      - {label: "Link de Google Drive", name: "drive_url", widget: "string", required: false, hint: "En Drive: clic derecho en el archivo → Compartir → 'Cualquier persona con el enlace' → Copiar enlace. Pégalo aquí."}
+      - {label: "Archivo de audio (solo si no usas Drive)", name: "audio", widget: "file", required: false}
+      - {label: "Duración (ej: 4:35)", name: "duracion", widget: "string", required: false, pattern: ["^(\\d{1,2}:)?\\d{1,2}:\\d{2}$", "Usa el formato 4:35 o 1:02:10"], hint: "Completa la duración de TODOS los audios para activar el botón 'Sintonizar en vivo'."}
+      - {label: "Portada", name: "portada", widget: "image", required: false}
+      - {label: "Orden (1 suena primero)", name: "orden", widget: "number", value_type: "int", default: 1}
+      - {label: "Activo (sale al aire)", name: "activo", widget: "boolean", default: true}
